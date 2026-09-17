@@ -12,10 +12,10 @@ STOP = "STOP"
 WORK_WIDTH = 960  # 追蹤時縮小到此寬度以加速
 
 
-def to_work_gray(frame):
-    """回傳 (縮小灰階圖, 縮放比例)"""
+def to_work_gray(frame, work_width=WORK_WIDTH):
+    """回傳 (縮小灰階圖, 縮放比例); work_width <= 0 代表用原始解析度"""
     h, w = frame.shape[:2]
-    s = min(1.0, WORK_WIDTH / float(w))
+    s = min(1.0, work_width / float(w)) if work_width and work_width > 0 else 1.0
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     if s < 1.0:
         gray = cv2.resize(gray, (int(round(w * s)), int(round(h * s))), interpolation=cv2.INTER_AREA)
@@ -111,15 +111,23 @@ def match_score(gray, ref, poly):
         H = cv2.getPerspectiveTransform(ref["poly"][:4].astype(np.float32), poly[:4].astype(np.float32))
     except cv2.error:
         return None
+    # 只在假設位置 (含外擴) 的外接矩形內計算, 高解析度時也很快
     h, w = gray.shape[:2]
-    m = cv2.warpPerspective(ref["mask"], H, (w, h), flags=cv2.INTER_NEAREST)
+    p = expand_poly(poly.astype(np.float32), 0.3)
+    x0, y0 = np.maximum(np.floor(p.min(axis=0)).astype(int), 0)
+    x1, y1 = np.minimum(np.ceil(p.max(axis=0)).astype(int), [w, h])
+    if x1 - x0 < 10 or y1 - y0 < 10:
+        return None
+    H = np.array([[1, 0, -x0], [0, 1, -y0], [0, 0, 1]], np.float64).dot(H)
+    size = (int(x1 - x0), int(y1 - y0))
+    m = cv2.warpPerspective(ref["mask"], H, size, flags=cv2.INTER_NEAREST)
     m = cv2.erode(m, np.ones((5, 5), np.uint8))
     sel = m > 0
     if sel.sum() < 300:
         return None
-    wref = cv2.warpPerspective(ref["gray"], H, (w, h), flags=cv2.INTER_LINEAR)
+    wref = cv2.warpPerspective(ref["gray"], H, size, flags=cv2.INTER_LINEAR)
     a = wref[sel].astype(np.float32)
-    b = gray[sel].astype(np.float32)
+    b = gray[y0:y1, x0:x1][sel].astype(np.float32)
     a -= a.mean()
     b -= b.mean()
     d = np.sqrt((a * a).sum() * (b * b).sum())
@@ -199,11 +207,16 @@ def track_step(prev_gray, gray, poly, ref_area):
 class Engine(object):
     def __init__(self):
         self.targets = []
-        self.hold_frames = 15       # 遺失後仍在最後位置模糊幾幀
+        self.hold_frames = 5         # 遺失後仍在最後位置模糊幾幀, 超過就自動停止模糊
         self.blur_mode = "gaussian"  # gaussian / pixelate / solid
         self.strength = 50           # 1~100
-        self.padding = 0.08          # 模糊範圍向外擴張比例
+        self.padding = 0.05          # 模糊範圍向外擴張比例 (保留一點追蹤誤差的餘裕)
         self.recheck_every = 5       # 每幾幀用樣板校正一次漂移
+        self.min_conf = 0.3          # 可信度 (與框選當下樣板的 NCC) 低於此值視為遺失, 0 = 不檢查
+        self.work_width = WORK_WIDTH  # 追蹤運算寬度, 0 = 原始解析度; 變更後需重建樣板 (見 app)
+
+    def to_gray(self, frame):
+        return to_work_gray(frame, self.work_width)
 
     def process(self, idx, gray, prev_gray, scale):
         """計算第 idx 幀每個目標的狀態.
@@ -223,24 +236,30 @@ class Engine(object):
         if e is None:
             if kf == idx:
                 p = t.keyframes[idx]
-                e = {"poly": p, "lost": 0, "anchor": p, "kf": kf}
+                e = {"poly": p, "lost": 0, "anchor": p, "kf": kf, "conf": 1.0}
             else:
                 pe = t.cache.get(idx - 1)
                 if pe is None or prev_gray is None or pe["kf"] != kf:
                     return None, "尚未追蹤到此幀"
                 e = self._track(t, idx, kf, pe, gray, prev_gray, scale)
             t.cache[idx] = e
+        conf = e.get("conf")
+        ctxt = "" if conf is None else " %d%%" % round(max(conf, 0) * 100)
         if e["lost"] == 0:
-            return e["poly"], "追蹤中"
+            return e["poly"], "追蹤中" + ctxt
         if e["lost"] <= self.hold_frames:
             return e["anchor"], "遺失(保留模糊 %d)" % e["lost"]
-        return None, "遺失"
+        return None, "遺失-已停止模糊"
 
     def _track(self, t, idx, kf, pe, gray, prev_gray, scale):
         ref = t.refs[kf]
-        new = None
+        new, score = None, None
         if pe["lost"] == 0:
             new = track_step(prev_gray, gray, pe["poly"] * scale, ref["area"])
+            if new is not None:
+                score = match_score(gray, ref, new)
+                if self.min_conf > 0 and score is not None and score < self.min_conf:
+                    new = None  # 位置可疑 (可能追到別的東西), 寧可視為遺失
         edge = new is not None and not poly_inside(new, gray.shape)
         if new is None or edge or (idx - kf) % self.recheck_every == 0:
             # 遺失時找回; 追蹤中也定期 (目標在畫面邊緣時每幀) 與樣板比對修正漂移.
@@ -249,16 +268,15 @@ class Engine(object):
             if r is not None:
                 sr = match_score(gray, ref, r)
                 if new is None:
-                    if sr is not None and sr > 0.5:
-                        new = r
-                else:
-                    sk = match_score(gray, ref, new)
-                    if sr is not None and (sk is None or sr > sk + 0.02):
-                        new = r
+                    # 找回時要求較高可信度, 避免認成另一扇相似的窗戶
+                    if sr is not None and sr > max(0.5, self.min_conf):
+                        new, score = r, sr
+                elif sr is not None and (score is None or sr > score + 0.02):
+                    new, score = r, sr
         if new is not None:
             p = (new / scale).astype(np.float32)
-            return {"poly": p, "lost": 0, "anchor": p, "kf": kf}
-        return {"poly": None, "lost": pe["lost"] + 1, "anchor": pe["anchor"], "kf": kf}
+            return {"poly": p, "lost": 0, "anchor": p, "kf": kf, "conf": score}
+        return {"poly": None, "lost": pe["lost"] + 1, "anchor": pe["anchor"], "kf": kf, "conf": None}
 
     def render(self, frame, results):
         for t, poly, _ in results:

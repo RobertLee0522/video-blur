@@ -28,6 +28,52 @@ import tracker as T
 
 BLUR_MODES = [("高斯模糊", "gaussian"), ("馬賽克", "pixelate"), ("黑色遮擋", "solid")]
 IS_MAC = sys.platform == "darwin"
+WORK_WIDTHS = [("960 (快)", 960), ("1440", 1440), ("1920", 1920), ("原始解析度 (慢)", 0)]
+ENCODERS = [
+    ("H.264 軟體 x264 (畫質最佳)", "libx264"),
+    ("H.265 軟體 x265 (檔案小, 慢)", "libx265"),
+    ("H.264 Apple 硬體", "h264_videotoolbox"),
+    ("H.265 Apple 硬體", "hevc_videotoolbox"),
+    ("H.264 NVIDIA 硬體", "h264_nvenc"),
+    ("H.265 NVIDIA 硬體", "hevc_nvenc"),
+]
+
+
+def available_encoders():
+    """回傳 UI 可選的 [(名稱, ffmpeg 編碼器)], 第一個為預設. Mac 預設用 Apple 硬體編碼"""
+    ffmpeg = shutil.which("ffmpeg")
+    if not ffmpeg:
+        return [("OpenCV mp4v (未安裝 ffmpeg)", "opencv")]
+    try:
+        kw = {"creationflags": 0x08000000} if sys.platform == "win32" else {}
+        out = subprocess.run([ffmpeg, "-hide_banner", "-encoders"], stdout=subprocess.PIPE,
+                             stderr=subprocess.DEVNULL, timeout=15, **kw).stdout.decode("utf-8", "replace")
+        names = set(line.split()[1] for line in out.splitlines() if len(line.split()) > 1)
+    except (OSError, subprocess.SubprocessError):
+        names = {"libx264"}
+    encs = [e for e in ENCODERS if e[1] in names] or [ENCODERS[0]]
+    if IS_MAC:
+        encs.sort(key=lambda e: e[1] != "h264_videotoolbox")
+    return encs
+
+
+def video_args(encoder, w, h, fps, src_kbps):
+    """ffmpeg 視訊編碼參數. 軟體編碼用固定畫質 (CRF); 硬體編碼用位元率 (參考原片, 至少依解析度估計)"""
+    kbps = int(max(src_kbps * 1.2 if src_kbps else 0, w * h * fps * 0.1 / 1000.0, 2000))
+    hevc_tag = ["-tag:v", "hvc1"] if "265" in encoder or "hevc" in encoder else []
+    if encoder == "libx264":
+        args = ["-c:v", "libx264", "-crf", "18", "-preset", "medium"]
+    elif encoder == "libx265":
+        args = ["-c:v", "libx265", "-crf", "20", "-preset", "medium"]
+    elif encoder.endswith("_videotoolbox"):
+        args = ["-c:v", encoder, "-b:v", "%dk" % kbps, "-maxrate", "%dk" % int(kbps * 1.5),
+                "-bufsize", "%dk" % (kbps * 2), "-allow_sw", "1"]
+    elif encoder.endswith("_nvenc"):
+        args = ["-c:v", encoder, "-preset", "p5", "-rc", "vbr", "-cq", "19" if "h264" in encoder else "21",
+                "-b:v", "0"]
+    else:
+        raise ValueError("未知的編碼器: %s" % encoder)
+    return args + ["-pix_fmt", "yuv420p"] + hevc_tag
 
 
 class App(object):
@@ -139,19 +185,35 @@ class App(object):
         sp.bind("<Return>", lambda e: self._apply_settings())
         sp.bind("<FocusOut>", lambda e: self._apply_settings())
 
+        self.conf_var = tk.IntVar(value=int(self.engine.min_conf * 100))
+        self._slider_row(f, 4, "最低可信度 %", self.conf_var, 0, 90)
+
+        ttk.Label(f, text="追蹤解析度").grid(row=5, column=0, sticky=tk.W, pady=2)
+        self.work_var = tk.StringVar(value=self._work_label(self.engine.work_width))
+        cb = ttk.Combobox(f, textvariable=self.work_var, values=[w[0] for w in WORK_WIDTHS], state="readonly")
+        cb.grid(row=5, column=1, sticky=tk.EW)
+        cb.bind("<<ComboboxSelected>>", lambda e: self.change_work_width())
+
+        ttk.Label(f, text="輸出編碼").grid(row=6, column=0, sticky=tk.W, pady=2)
+        self.encoders = available_encoders()
+        self.enc_var = tk.StringVar(value=self.encoders[0][0])
+        ttk.Combobox(f, textvariable=self.enc_var, values=[e[0] for e in self.encoders], state="readonly").grid(
+            row=6, column=1, sticky=tk.EW)
+
         self.show_box_var = tk.BooleanVar(value=True)
         self.preview_blur_var = tk.BooleanVar(value=True)
         ttk.Checkbutton(f, text="顯示追蹤框", variable=self.show_box_var, command=self.render).grid(
-            row=4, column=0, columnspan=2, sticky=tk.W)
+            row=7, column=0, sticky=tk.W)
         ttk.Checkbutton(f, text="預覽模糊", variable=self.preview_blur_var, command=self.render).grid(
-            row=5, column=0, columnspan=2, sticky=tk.W)
+            row=7, column=1, sticky=tk.W)
 
         ttk.Separator(side).pack(fill=tk.X, pady=8)
         tip = ("說明:\n"
                "• 暫停在目標清楚的畫面再框選\n"
                "• 窗戶建議用「點四角」, 轉向時會跟著透視變形\n"
-               "• 綠框=追蹤中, 橘框=暫時遺失(保留模糊)\n"
-               "• 跳到後面沒追蹤過的幀不會模糊, 按「分析追蹤」或匯出時會自動從頭追蹤\n"
+               "• 綠框=追蹤中 (數字為可信度), 橘框=暫時遺失仍模糊, 紅虛線=遺失已停止模糊\n"
+               "• 跳到後面沒追蹤過的幀不會模糊, 按「分析追蹤」或匯出時會自動追蹤\n"
+               "• 可信度低於門檻視為遺失, 避免模糊到另一扇相似的窗戶\n"
                "• 追歪了: 暫停, 選目標, 按「在此幀重新框選」")
         ttk.Label(side, text=tip, wraplength=310, justify=tk.LEFT, foreground="#555").pack(anchor=tk.W)
 
@@ -232,6 +294,12 @@ class App(object):
         self.engine.blur_mode = dict(BLUR_MODES)[self.mode_var.get()]
         self.engine.strength = self.strength_var.get()
         self.engine.padding = self.pad_var.get() / 100.0
+        min_conf = self.conf_var.get() / 100.0
+        if min_conf != self.engine.min_conf:
+            # 可信度門檻會改變追蹤結果, 之前算好的要重算
+            self.engine.min_conf = min_conf
+            for t in self.engine.targets:
+                t.cache.clear()
         try:
             self.engine.hold_frames = max(0, int(self.hold_var.get()))
         except (tk.TclError, ValueError):
@@ -239,6 +307,39 @@ class App(object):
         if self.cur_frame is not None:
             self.results = self.engine.process(self.cur_idx, self.cur_gray, self.prev_gray, self.scale)
             self.render()
+
+    @staticmethod
+    def _work_label(width):
+        return next((lbl for lbl, w in WORK_WIDTHS if w == width), WORK_WIDTHS[0][0])
+
+    def change_work_width(self):
+        width = dict(WORK_WIDTHS)[self.work_var.get()]
+        if width == self.engine.work_width:
+            return
+        self.engine.work_width = width
+        if self.cap is None:
+            return
+        # 樣板是用舊解析度建立的, 需重建; 追蹤結果也要重算
+        self._set_status("重建追蹤樣板中...")
+        self.root.update_idletasks()
+        self._rebuild_refs()
+        idx, self.cur_idx, self.cap_pos = self.cur_idx, -1, -1
+        self.goto(idx)
+        self._set_status("追蹤解析度: %s (已清除舊的追蹤結果)" % self.work_var.get())
+
+    def _rebuild_refs(self):
+        cap = cv2.VideoCapture(self.path)
+        for t in self.engine.targets:
+            t.cache.clear()
+            for k, v in t.keyframes.items():
+                if v is T.STOP:
+                    continue
+                cap.set(cv2.CAP_PROP_POS_FRAMES, k)
+                ok, fr = cap.read()
+                if ok:
+                    g, s = self.engine.to_gray(fr)
+                    t.refs[k] = T.build_ref(g, v * s)
+        cap.release()
 
     # ------------------------------------------------------------ video io
     def open_video(self, path=None):
@@ -289,7 +390,7 @@ class App(object):
         elif idx > 0:
             pf = self._read(idx - 1)
             if pf is not None:
-                prev_gray = T.to_work_gray(pf)[0]
+                prev_gray = self.engine.to_gray(pf)[0]
         f = self._read(idx)
         if f is None:
             # 影格數估計不準時, 以實際可讀到的為準
@@ -303,7 +404,7 @@ class App(object):
     def _set_frame(self, idx, frame, prev_gray):
         self.cur_idx = idx
         self.cur_frame = frame
-        self.cur_gray, self.scale = T.to_work_gray(frame)
+        self.cur_gray, self.scale = self.engine.to_gray(frame)
         self.prev_gray = prev_gray
         self.results = self.engine.process(idx, self.cur_gray, prev_gray, self.scale)
         self.render()
@@ -397,16 +498,26 @@ class App(object):
         if self.show_box_var.get():
             sel = self.selected_target()
             for t, poly, status in self.results:
+                label = t.name
+                dash = () if t.blur_enabled else (4, 3)
                 if poly is None:
-                    continue
-                color = "#34d058" if status == "追蹤中" else "#ff9f1a"
+                    e = t.cache.get(self.cur_idx)
+                    if e is None or e["lost"] == 0:
+                        continue
+                    # 遺失且已停止模糊: 在最後位置畫紅色虛線提醒
+                    poly, color, dash = e["anchor"], "#ff4d4f", (6, 4)
+                    label = "%s 遺失-未模糊" % t.name
+                elif status.startswith("追蹤中"):
+                    color = "#34d058"
+                    label = "%s%s" % (t.name, status[3:])
+                else:
+                    color = "#ff9f1a"
                 if not t.blur_enabled:
                     color = "#9aa0a6"
                 pts = [(x * s + ox, y * s + oy) for x, y in poly]
-                c.create_polygon(*sum(pts, ()), outline=color, fill="", width=3 if t is sel else 1.5,
-                                 dash=() if t.blur_enabled else (4, 3))
+                c.create_polygon(*sum(pts, ()), outline=color, fill="", width=3 if t is sel else 1.5, dash=dash)
                 x0, y0 = min(p[0] for p in pts), min(p[1] for p in pts)
-                c.create_text(x0 + 2, y0 - 2, anchor=tk.SW, text=t.name, fill=color, font=("", 11, "bold"))
+                c.create_text(x0 + 2, y0 - 2, anchor=tk.SW, text=label, fill=color, font=("", 11, "bold"))
         self._draw_temp()
 
     def _draw_temp(self, mouse=None):
@@ -640,6 +751,7 @@ class App(object):
         except tk.TclError:
             pass
 
+        state["encoder"] = dict(self.encoders).get(self.enc_var.get(), "libx264")
         th = threading.Thread(target=self._batch_worker, args=(self.path, out_path, state))
         th.daemon = True
         th.start()
@@ -647,10 +759,11 @@ class App(object):
 
         def poll():
             i = state["i"]
-            pb["value"] = i
+            total = state.get("total", self.n_frames)
+            pb.config(maximum=max(1, total), value=i)
             el = time.time() - t0
             fps = i / el if el > 0 else 0
-            lbl.config(text=state["msg"] or "第 %d / %d 幀   %.1f fps" % (i, self.n_frames, fps))
+            lbl.config(text=state["msg"] or "%d / %d 幀   %.1f fps" % (i, total, fps))
             if not state["done"]:
                 self.root.after(100, poll)
                 return
@@ -676,28 +789,47 @@ class App(object):
                 self._set_status("分析完成, 可任意拖曳時間軸檢查追蹤結果")
         poll()
 
+    def analysis_range(self):
+        """只需分析的幀範圍 [start, end): 從最早的框選到最後一個取消點 (沒取消則到片尾)"""
+        start, end = None, 0
+        for t in self.engine.targets:
+            polys = [k for k, v in t.keyframes.items() if v is not T.STOP]
+            if not polys:
+                continue
+            start = min(polys) if start is None else min(start, min(polys))
+            last = max(t.keyframes)
+            end = max(end, last if t.keyframes[last] is T.STOP else self.n_frames)
+        return (0, 0) if start is None else (start, end)
+
     def _batch_worker(self, src, out_path, state):
         sink = None
         try:
             cap = cv2.VideoCapture(src)
+            start, end = 0, None
+            if not out_path:  # 只分析: 跳過不需要追蹤的片段
+                start, end = self.analysis_range()
+                state["total"] = end - start
+                if start > 0:
+                    cap.set(cv2.CAP_PROP_POS_FRAMES, start)
+            src_kbps = cap.get(getattr(cv2, "CAP_PROP_BITRATE", 47)) or 0
             prev = None
-            idx = 0
-            while not state["cancel"]:
+            idx = start
+            while not state["cancel"] and (end is None or idx < end):
                 ok, frame = cap.read()
                 if not ok:
                     break
-                gray, s = T.to_work_gray(frame)
+                gray, s = self.engine.to_gray(frame)
                 res = self.engine.process(idx, gray, prev, s)
                 if out_path:
                     if sink is None:
                         h, w = frame.shape[:2]
-                        sink = VideoSink(out_path, src, w, h, self.fps)
+                        sink = VideoSink(out_path, src, w, h, self.fps, state.get("encoder", "libx264"), src_kbps)
                     sink.write(self.engine.render(frame, res))
                 prev = gray
                 idx += 1
-                state["i"] = idx
+                state["i"] = idx - start
             cap.release()
-            if idx > 0 and not state["cancel"]:
+            if out_path and idx > 0 and not state["cancel"]:
                 self.n_frames = idx
             if sink is not None:
                 state["msg"] = "寫入檔案中..."
@@ -723,7 +855,8 @@ class App(object):
         data = {
             "video": self.path,
             "settings": {"mode": self.engine.blur_mode, "strength": self.engine.strength,
-                         "padding": self.engine.padding, "hold": self.engine.hold_frames},
+                         "padding": self.engine.padding, "hold": self.engine.hold_frames,
+                         "min_conf": self.engine.min_conf, "work_width": self.engine.work_width},
             "targets": [{
                 "name": t.name, "blur": t.blur_enabled,
                 "keyframes": [[k, "STOP" if v is T.STOP else v.tolist()] for k, v in sorted(t.keyframes.items())],
@@ -745,13 +878,17 @@ class App(object):
         if not os.path.exists(video):
             messagebox.showinfo("找不到影片", "請重新選擇專案對應的影片:\n%s" % data["video"])
             video = None
+        st = data.get("settings", {})
+        # 追蹤解析度要在讀影片、建樣板之前設定
+        self.engine.work_width = int(st.get("work_width", T.WORK_WIDTH))
+        self.work_var.set(self._work_label(self.engine.work_width))
         if not self.open_video(video):
             return
-        st = data.get("settings", {})
         self.mode_var.set(dict((v, k) for k, v in BLUR_MODES).get(st.get("mode"), BLUR_MODES[0][0]))
         self.strength_var.set(st.get("strength", 50))
-        self.pad_var.set(int(st.get("padding", 0.08) * 100))
-        self.hold_var.set(st.get("hold", 15))
+        self.pad_var.set(int(round(st.get("padding", 0.05) * 100)))
+        self.hold_var.set(st.get("hold", 5))
+        self.conf_var.set(int(round(st.get("min_conf", 0.3) * 100)))
         cap = cv2.VideoCapture(video)
         for td in data["targets"]:
             t = T.Target(td["name"])
@@ -763,7 +900,7 @@ class App(object):
                 cap.set(cv2.CAP_PROP_POS_FRAMES, int(k))
                 ok, fr = cap.read()
                 if ok:
-                    g, s = T.to_work_gray(fr)
+                    g, s = self.engine.to_gray(fr)
                     t.set_keyframe(int(k), np.float32(v), g, s)
             self.engine.targets.append(t)
         cap.release()
@@ -777,21 +914,19 @@ class VideoSink(object):
     有 ffmpeg: 未壓縮的畫面直接用管線送進 ffmpeg, 壓成 H.264 並合併原影片音訊.
     沒有 ffmpeg: 用 OpenCV 直接寫 mp4 (無聲音, 畫質較低)."""
 
-    CRF = 18  # 越小畫質越好檔案越大, 18 約為肉眼無損
-
-    def __init__(self, out_path, src, w, h, fps):
+    def __init__(self, out_path, src, w, h, fps, encoder="libx264", src_kbps=0):
         self.out_path = out_path
         self.note = ""
         self.proc = None
         self.writer = None
         ffmpeg = shutil.which("ffmpeg")
-        if ffmpeg:
+        if ffmpeg and encoder != "opencv":
             self.log = tempfile.TemporaryFile()
-            cmd = [ffmpeg, "-y", "-loglevel", "error",
-                   "-f", "rawvideo", "-pix_fmt", "bgr24", "-s", "%dx%d" % (w, h), "-r", "%.6f" % fps, "-i", "-",
-                   "-i", src, "-map", "0:v:0", "-map", "1:a?",
-                   "-c:v", "libx264", "-crf", str(self.CRF), "-preset", "medium", "-pix_fmt", "yuv420p",
-                   "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", out_path]
+            cmd = ([ffmpeg, "-y", "-loglevel", "error",
+                    "-f", "rawvideo", "-pix_fmt", "bgr24", "-s", "%dx%d" % (w, h), "-r", "%.6f" % fps, "-i", "-",
+                    "-i", src, "-map", "0:v:0", "-map", "1:a?"]
+                   + video_args(encoder, w, h, fps, src_kbps)
+                   + ["-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", out_path])
             kw = {"creationflags": 0x08000000} if sys.platform == "win32" else {}
             self.proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.DEVNULL,
                                          stderr=self.log, **kw)
