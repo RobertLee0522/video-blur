@@ -1,0 +1,1066 @@
+{
+ "env": {
+  "os": "Windows-10-10.0.26200-SP0",
+  "machine": "AMD64",
+  "processor": "Intel64 Family 6 Model 151 Stepping 2, GenuineIntel",
+  "python": "3.11.13",
+  "opencv": "4.10.0",
+  "numpy": "1.26.4",
+  "ffmpeg": "ffmpeg version 7.1.1-full_build-www.gyan.dev Copyright (c) 2000-2025 the FFmpeg developers",
+  "ffmpeg_path": "C:\\ProgramData\\chocolatey\\bin\\ffmpeg.EXE"
+ },
+ "available_encoders": [
+  "libx264",
+  "libx265",
+  "h264_nvenc",
+  "hevc_nvenc"
+ ],
+ "results": [
+  {
+   "source": "S1 1080p 30fps CFR",
+   "encoder": "libx264",
+   "error": null,
+   "wall_s": 20.5,
+   "export_fps": 87.8,
+   "opencv_CAP_PROP_FPS": 30.0,
+   "src": {
+    "codec": "h264",
+    "pix_fmt": "yuv420p",
+    "size": [
+     1920,
+     1080
+    ],
+    "rotation": 0,
+    "display_size": [
+     1920,
+     1080
+    ],
+    "r_frame_rate": "30/1",
+    "avg_frame_rate": "30/1",
+    "frames": 1800,
+    "v_duration": 60.0,
+    "v_start": 0.0,
+    "color_transfer": null,
+    "color_primaries": null,
+    "audio": {
+     "codec": "aac",
+     "duration": 60.0,
+     "start": 0.0,
+     "sample_rate": "48000"
+    },
+    "size_mb": 3.12
+   },
+   "out": {
+    "codec": "h264",
+    "pix_fmt": "yuv420p",
+    "size": [
+     1920,
+     1080
+    ],
+    "rotation": 0,
+    "display_size": [
+     1920,
+     1080
+    ],
+    "r_frame_rate": "30/1",
+    "avg_frame_rate": "30/1",
+    "frames": 1800,
+    "v_duration": 60.0,
+    "v_start": 0.0,
+    "color_transfer": null,
+    "color_primaries": null,
+    "audio": {
+     "codec": "aac",
+     "duration": 59.989,
+     "start": 0.0,
+     "sample_rate": "48000"
+    },
+    "size_mb": 4.14
+   },
+   "check_display_size": true,
+   "check_r_frame_rate": true,
+   "check_frames": true,
+   "frames_diff": 0,
+   "check_audio": true,
+   "va_duration_diff_s": 0.011,
+   "src_events": 12,
+   "out_events": 12,
+   "src_av_offsets": [
+    0.0004,
+    0.0005,
+    0.0005,
+    0.0004,
+    0.0005,
+    0.0004,
+    0.0004,
+    0.0004,
+    0.0004,
+    0.0005,
+    0.0005,
+    0.0004
+   ],
+   "out_av_offsets": [
+    0.0004,
+    0.0005,
+    0.0004,
+    0.0004,
+    0.0005,
+    0.0004,
+    0.0004,
+    0.0004,
+    0.0004,
+    0.0005,
+    0.0004,
+    0.0004
+   ],
+   "av_drift_vs_src": [
+    0.0,
+    0.0,
+    -0.0001,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -0.0001,
+    0.0
+   ],
+   "max_abs_drift_s": 0.0001,
+   "sync_limit_s": 0.0563,
+   "check_sync": true,
+   "check_va_duration": true
+  },
+  {
+   "source": "S1 1080p 30fps CFR",
+   "encoder": "libx265",
+   "error": null,
+   "wall_s": 23.9,
+   "export_fps": 75.3,
+   "opencv_CAP_PROP_FPS": 30.0,
+   "src": {
+    "codec": "h264",
+    "pix_fmt": "yuv420p",
+    "size": [
+     1920,
+     1080
+    ],
+    "rotation": 0,
+    "display_size": [
+     1920,
+     1080
+    ],
+    "r_frame_rate": "30/1",
+    "avg_frame_rate": "30/1",
+    "frames": 1800,
+    "v_duration": 60.0,
+    "v_start": 0.0,
+    "color_transfer": null,
+    "color_primaries": null,
+    "audio": {
+     "codec": "aac",
+     "duration": 60.0,
+     "start": 0.0,
+     "sample_rate": "48000"
+    },
+    "size_mb": 3.12
+   },
+   "out": {
+    "codec": "hevc",
+    "pix_fmt": "yuv420p",
+    "size": [
+     1920,
+     1080
+    ],
+    "rotation": 0,
+    "display_size": [
+     1920,
+     1080
+    ],
+    "r_frame_rate": "30/1",
+    "avg_frame_rate": "30/1",
+    "frames": 1800,
+    "v_duration": 60.0,
+    "v_start": 0.0,
+    "color_transfer": null,
+    "color_primaries": null,
+    "audio": {
+     "codec": "aac",
+     "duration": 59.989,
+     "start": 0.0,
+     "sample_rate": "48000"
+    },
+    "size_mb": 2.5
+   },
+   "check_display_size": true,
+   "check_r_frame_rate": true,
+   "check_frames": true,
+   "frames_diff": 0,
+   "check_audio": true,
+   "va_duration_diff_s": 0.011,
+   "src_events": 12,
+   "out_events": 12,
+   "src_av_offsets": [
+    0.0004,
+    0.0005,
+    0.0005,
+    0.0004,
+    0.0005,
+    0.0004,
+    0.0004,
+    0.0004,
+    0.0004,
+    0.0005,
+    0.0005,
+    0.0004
+   ],
+   "out_av_offsets": [
+    0.0004,
+    0.0005,
+    0.0004,
+    0.0004,
+    0.0005,
+    0.0004,
+    0.0004,
+    0.0004,
+    0.0004,
+    0.0005,
+    0.0004,
+    0.0004
+   ],
+   "av_drift_vs_src": [
+    0.0,
+    0.0,
+    -0.0001,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -0.0001,
+    0.0
+   ],
+   "max_abs_drift_s": 0.0001,
+   "sync_limit_s": 0.0563,
+   "check_sync": true,
+   "check_va_duration": true
+  },
+  {
+   "source": "S1 1080p 30fps CFR",
+   "encoder": "h264_nvenc",
+   "error": null,
+   "wall_s": 16.6,
+   "export_fps": 108.4,
+   "opencv_CAP_PROP_FPS": 30.0,
+   "src": {
+    "codec": "h264",
+    "pix_fmt": "yuv420p",
+    "size": [
+     1920,
+     1080
+    ],
+    "rotation": 0,
+    "display_size": [
+     1920,
+     1080
+    ],
+    "r_frame_rate": "30/1",
+    "avg_frame_rate": "30/1",
+    "frames": 1800,
+    "v_duration": 60.0,
+    "v_start": 0.0,
+    "color_transfer": null,
+    "color_primaries": null,
+    "audio": {
+     "codec": "aac",
+     "duration": 60.0,
+     "start": 0.0,
+     "sample_rate": "48000"
+    },
+    "size_mb": 3.12
+   },
+   "out": {
+    "codec": "h264",
+    "pix_fmt": "yuv420p",
+    "size": [
+     1920,
+     1080
+    ],
+    "rotation": 0,
+    "display_size": [
+     1920,
+     1080
+    ],
+    "r_frame_rate": "30/1",
+    "avg_frame_rate": "30/1",
+    "frames": 1800,
+    "v_duration": 60.0,
+    "v_start": 0.0,
+    "color_transfer": null,
+    "color_primaries": null,
+    "audio": {
+     "codec": "aac",
+     "duration": 59.989,
+     "start": 0.0,
+     "sample_rate": "48000"
+    },
+    "size_mb": 4.99
+   },
+   "check_display_size": true,
+   "check_r_frame_rate": true,
+   "check_frames": true,
+   "frames_diff": 0,
+   "check_audio": true,
+   "va_duration_diff_s": 0.011,
+   "src_events": 12,
+   "out_events": 12,
+   "src_av_offsets": [
+    0.0004,
+    0.0005,
+    0.0005,
+    0.0004,
+    0.0005,
+    0.0004,
+    0.0004,
+    0.0004,
+    0.0004,
+    0.0005,
+    0.0005,
+    0.0004
+   ],
+   "out_av_offsets": [
+    0.0004,
+    0.0005,
+    0.0004,
+    0.0004,
+    0.0005,
+    0.0004,
+    0.0004,
+    0.0004,
+    0.0004,
+    0.0005,
+    0.0004,
+    0.0004
+   ],
+   "av_drift_vs_src": [
+    0.0,
+    0.0,
+    -0.0001,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -0.0001,
+    0.0
+   ],
+   "max_abs_drift_s": 0.0001,
+   "sync_limit_s": 0.0563,
+   "check_sync": true,
+   "check_va_duration": true
+  },
+  {
+   "source": "S1 1080p 30fps CFR",
+   "encoder": "hevc_nvenc",
+   "error": null,
+   "wall_s": 16.5,
+   "export_fps": 109.1,
+   "opencv_CAP_PROP_FPS": 30.0,
+   "src": {
+    "codec": "h264",
+    "pix_fmt": "yuv420p",
+    "size": [
+     1920,
+     1080
+    ],
+    "rotation": 0,
+    "display_size": [
+     1920,
+     1080
+    ],
+    "r_frame_rate": "30/1",
+    "avg_frame_rate": "30/1",
+    "frames": 1800,
+    "v_duration": 60.0,
+    "v_start": 0.0,
+    "color_transfer": null,
+    "color_primaries": null,
+    "audio": {
+     "codec": "aac",
+     "duration": 60.0,
+     "start": 0.0,
+     "sample_rate": "48000"
+    },
+    "size_mb": 3.12
+   },
+   "out": {
+    "codec": "hevc",
+    "pix_fmt": "yuv420p",
+    "size": [
+     1920,
+     1080
+    ],
+    "rotation": 0,
+    "display_size": [
+     1920,
+     1080
+    ],
+    "r_frame_rate": "30/1",
+    "avg_frame_rate": "30/1",
+    "frames": 1800,
+    "v_duration": 60.0,
+    "v_start": 0.0,
+    "color_transfer": null,
+    "color_primaries": null,
+    "audio": {
+     "codec": "aac",
+     "duration": 59.989,
+     "start": 0.0,
+     "sample_rate": "48000"
+    },
+    "size_mb": 4.32
+   },
+   "check_display_size": true,
+   "check_r_frame_rate": true,
+   "check_frames": true,
+   "frames_diff": 0,
+   "check_audio": true,
+   "va_duration_diff_s": 0.011,
+   "src_events": 12,
+   "out_events": 12,
+   "src_av_offsets": [
+    0.0004,
+    0.0005,
+    0.0005,
+    0.0004,
+    0.0005,
+    0.0004,
+    0.0004,
+    0.0004,
+    0.0004,
+    0.0005,
+    0.0005,
+    0.0004
+   ],
+   "out_av_offsets": [
+    0.0004,
+    0.0005,
+    0.0004,
+    0.0004,
+    0.0005,
+    0.0004,
+    0.0004,
+    0.0004,
+    0.0004,
+    0.0005,
+    0.0004,
+    0.0004
+   ],
+   "av_drift_vs_src": [
+    0.0,
+    0.0,
+    -0.0001,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -0.0001,
+    0.0
+   ],
+   "max_abs_drift_s": 0.0001,
+   "sync_limit_s": 0.0563,
+   "check_sync": true,
+   "check_va_duration": true
+  },
+  {
+   "source": "S2 1080p 29.97fps CFR",
+   "encoder": "libx264",
+   "error": null,
+   "wall_s": 20.7,
+   "export_fps": 86.9,
+   "opencv_CAP_PROP_FPS": 29.97,
+   "src": {
+    "codec": "h264",
+    "pix_fmt": "yuv420p",
+    "size": [
+     1920,
+     1080
+    ],
+    "rotation": 0,
+    "display_size": [
+     1920,
+     1080
+    ],
+    "r_frame_rate": "30000/1001",
+    "avg_frame_rate": "30000/1001",
+    "frames": 1798,
+    "v_duration": 59.993267,
+    "v_start": 0.0,
+    "color_transfer": null,
+    "color_primaries": null,
+    "audio": {
+     "codec": "aac",
+     "duration": 60.0,
+     "start": 0.0,
+     "sample_rate": "48000"
+    },
+    "size_mb": 3.15
+   },
+   "out": {
+    "codec": "h264",
+    "pix_fmt": "yuv420p",
+    "size": [
+     1920,
+     1080
+    ],
+    "rotation": 0,
+    "display_size": [
+     1920,
+     1080
+    ],
+    "r_frame_rate": "979001/32666",
+    "avg_frame_rate": "979001/32666",
+    "frames": 1798,
+    "v_duration": 59.993267,
+    "v_start": 0.0,
+    "color_transfer": null,
+    "color_primaries": null,
+    "audio": {
+     "codec": "aac",
+     "duration": 59.989,
+     "start": 0.0,
+     "sample_rate": "48000"
+    },
+    "size_mb": 4.26
+   },
+   "check_display_size": true,
+   "check_r_frame_rate": false,
+   "check_frames": true,
+   "frames_diff": 0,
+   "check_audio": true,
+   "va_duration_diff_s": 0.0043,
+   "src_events": 12,
+   "out_events": 12,
+   "src_av_offsets": [
+    0.0004,
+    0.0005,
+    0.0005,
+    0.0005,
+    0.0004,
+    0.0004,
+    0.0004,
+    0.0004,
+    0.0005,
+    0.0004,
+    0.0004,
+    0.0005
+   ],
+   "out_av_offsets": [
+    0.0004,
+    0.0005,
+    0.0005,
+    0.0005,
+    0.0004,
+    0.0004,
+    0.0005,
+    0.0004,
+    0.0005,
+    0.0004,
+    0.0004,
+    0.0004
+   ],
+   "av_drift_vs_src": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0001,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -0.0001
+   ],
+   "max_abs_drift_s": 0.0001,
+   "sync_limit_s": 0.0564,
+   "check_sync": true,
+   "check_va_duration": true
+  },
+  {
+   "source": "S3 1080p VFR 30/60/24",
+   "encoder": "libx264",
+   "error": null,
+   "wall_s": 27.2,
+   "export_fps": 83.8,
+   "opencv_CAP_PROP_FPS": 38.0106,
+   "src": {
+    "codec": "h264",
+    "pix_fmt": "yuv420p",
+    "size": [
+     1920,
+     1080
+    ],
+    "rotation": 0,
+    "display_size": [
+     1920,
+     1080
+    ],
+    "r_frame_rate": "30/1",
+    "avg_frame_rate": "136800/3599",
+    "frames": 2280,
+    "v_duration": 59.983333,
+    "v_start": 0.0,
+    "color_transfer": null,
+    "color_primaries": null,
+    "audio": {
+     "codec": "aac",
+     "duration": 60.0,
+     "start": 0.0,
+     "sample_rate": "48000"
+    },
+    "size_mb": 3.49
+   },
+   "out": {
+    "codec": "h264",
+    "pix_fmt": "yuv420p",
+    "size": [
+     1920,
+     1080
+    ],
+    "rotation": 0,
+    "display_size": [
+     1920,
+     1080
+    ],
+    "r_frame_rate": "820838/21595",
+    "avg_frame_rate": "820838/21595",
+    "frames": 2280,
+    "v_duration": 59.983334,
+    "v_start": 0.0,
+    "color_transfer": null,
+    "color_primaries": null,
+    "audio": {
+     "codec": "aac",
+     "duration": 59.968,
+     "start": 0.0,
+     "sample_rate": "48000"
+    },
+    "size_mb": 4.88
+   },
+   "check_display_size": true,
+   "check_r_frame_rate": false,
+   "check_frames": true,
+   "frames_diff": 0,
+   "check_audio": true,
+   "va_duration_diff_s": 0.0153,
+   "src_events": 12,
+   "out_events": 7,
+   "src_av_offsets": [
+    0.0004,
+    0.0005,
+    0.0005,
+    0.0004,
+    0.0005,
+    0.0004,
+    0.0004,
+    0.0004,
+    0.0004,
+    0.0005,
+    0.0005,
+    0.0004
+   ],
+   "out_av_offsets": [
+    -0.5264,
+    1.3124,
+    0.1243,
+    0.9094,
+    1.4342,
+    -0.4088,
+    0.9052
+   ],
+   "av_drift_vs_src": [
+    -0.5268,
+    1.3119,
+    0.1238,
+    0.909,
+    1.4337,
+    -0.4092,
+    0.9048
+   ],
+   "max_abs_drift_s": 1.4337,
+   "sync_limit_s": 0.0563,
+   "check_sync": false,
+   "check_va_duration": true
+  },
+  {
+   "source": "S4 4K 60fps CFR",
+   "encoder": "libx264",
+   "error": null,
+   "wall_s": 30.3,
+   "export_fps": 19.8,
+   "opencv_CAP_PROP_FPS": 60.0,
+   "src": {
+    "codec": "h264",
+    "pix_fmt": "yuv420p",
+    "size": [
+     3840,
+     2160
+    ],
+    "rotation": 0,
+    "display_size": [
+     3840,
+     2160
+    ],
+    "r_frame_rate": "60/1",
+    "avg_frame_rate": "60/1",
+    "frames": 600,
+    "v_duration": 10.0,
+    "v_start": 0.0,
+    "color_transfer": null,
+    "color_primaries": null,
+    "audio": {
+     "codec": "aac",
+     "duration": 10.0,
+     "start": 0.0,
+     "sample_rate": "48000"
+    },
+    "size_mb": 3.46
+   },
+   "out": {
+    "codec": "h264",
+    "pix_fmt": "yuv420p",
+    "size": [
+     3840,
+     2160
+    ],
+    "rotation": 0,
+    "display_size": [
+     3840,
+     2160
+    ],
+    "r_frame_rate": "60/1",
+    "avg_frame_rate": "60/1",
+    "frames": 600,
+    "v_duration": 10.0,
+    "v_start": 0.0,
+    "color_transfer": null,
+    "color_primaries": null,
+    "audio": {
+     "codec": "aac",
+     "duration": 9.984,
+     "start": 0.0,
+     "sample_rate": "48000"
+    },
+    "size_mb": 6.73
+   },
+   "check_display_size": true,
+   "check_r_frame_rate": true,
+   "check_frames": true,
+   "frames_diff": 0,
+   "check_audio": true,
+   "va_duration_diff_s": 0.016,
+   "src_events": 3,
+   "out_events": 3,
+   "src_av_offsets": [
+    0.0004,
+    0.0004,
+    0.0005
+   ],
+   "out_av_offsets": [
+    0.0004,
+    0.0004,
+    0.0005
+   ],
+   "av_drift_vs_src": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "max_abs_drift_s": 0.0,
+   "sync_limit_s": 0.0397,
+   "check_sync": true,
+   "check_va_duration": true
+  },
+  {
+   "source": "S5 直式 (rotate=90 metadata)",
+   "encoder": "libx264",
+   "error": null,
+   "wall_s": 3.6,
+   "export_fps": 83.3,
+   "opencv_CAP_PROP_FPS": 30.0,
+   "src": {
+    "codec": "h264",
+    "pix_fmt": "yuv420p",
+    "size": [
+     1920,
+     1080
+    ],
+    "rotation": 0,
+    "display_size": [
+     1920,
+     1080
+    ],
+    "r_frame_rate": "30/1",
+    "avg_frame_rate": "30/1",
+    "frames": 300,
+    "v_duration": 10.0,
+    "v_start": 0.0,
+    "color_transfer": null,
+    "color_primaries": null,
+    "audio": {
+     "codec": "aac",
+     "duration": 10.0,
+     "start": 0.0,
+     "sample_rate": "48000"
+    },
+    "size_mb": 0.67
+   },
+   "out": {
+    "codec": "h264",
+    "pix_fmt": "yuv420p",
+    "size": [
+     1920,
+     1080
+    ],
+    "rotation": 0,
+    "display_size": [
+     1920,
+     1080
+    ],
+    "r_frame_rate": "30/1",
+    "avg_frame_rate": "30/1",
+    "frames": 300,
+    "v_duration": 10.0,
+    "v_start": 0.0,
+    "color_transfer": null,
+    "color_primaries": null,
+    "audio": {
+     "codec": "aac",
+     "duration": 9.984,
+     "start": 0.0,
+     "sample_rate": "48000"
+    },
+    "size_mb": 0.9
+   },
+   "check_display_size": true,
+   "check_r_frame_rate": true,
+   "check_frames": true,
+   "frames_diff": 0,
+   "check_audio": true,
+   "va_duration_diff_s": 0.016,
+   "src_events": 3,
+   "out_events": 3,
+   "src_av_offsets": [
+    0.0004,
+    0.0004,
+    0.0005
+   ],
+   "out_av_offsets": [
+    0.0004,
+    0.0004,
+    0.0005
+   ],
+   "av_drift_vs_src": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "max_abs_drift_s": 0.0,
+   "sync_limit_s": 0.0563,
+   "check_sync": true,
+   "check_va_duration": true
+  },
+  {
+   "source": "S6 HEVC 10-bit HDR 標記",
+   "encoder": "libx264",
+   "error": null,
+   "wall_s": 4.4,
+   "export_fps": 68.2,
+   "opencv_CAP_PROP_FPS": 30.0,
+   "src": {
+    "codec": "hevc",
+    "pix_fmt": "yuv420p10le",
+    "size": [
+     1920,
+     1080
+    ],
+    "rotation": 0,
+    "display_size": [
+     1920,
+     1080
+    ],
+    "r_frame_rate": "30/1",
+    "avg_frame_rate": "30/1",
+    "frames": 300,
+    "v_duration": 10.0,
+    "v_start": 0.0,
+    "color_transfer": null,
+    "color_primaries": null,
+    "audio": {
+     "codec": "aac",
+     "duration": 10.0,
+     "start": 0.0,
+     "sample_rate": "48000"
+    },
+    "size_mb": 0.38
+   },
+   "out": {
+    "codec": "h264",
+    "pix_fmt": "yuv420p",
+    "size": [
+     1920,
+     1080
+    ],
+    "rotation": 0,
+    "display_size": [
+     1920,
+     1080
+    ],
+    "r_frame_rate": "30/1",
+    "avg_frame_rate": "30/1",
+    "frames": 300,
+    "v_duration": 10.0,
+    "v_start": 0.0,
+    "color_transfer": null,
+    "color_primaries": null,
+    "audio": {
+     "codec": "aac",
+     "duration": 9.984,
+     "start": 0.0,
+     "sample_rate": "48000"
+    },
+    "size_mb": 0.86
+   },
+   "check_display_size": true,
+   "check_r_frame_rate": true,
+   "check_frames": true,
+   "frames_diff": 0,
+   "check_audio": true,
+   "va_duration_diff_s": 0.016,
+   "src_events": 3,
+   "out_events": 3,
+   "src_av_offsets": [
+    0.0004,
+    0.0004,
+    0.0005
+   ],
+   "out_av_offsets": [
+    0.0004,
+    0.0004,
+    0.0005
+   ],
+   "av_drift_vs_src": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "max_abs_drift_s": 0.0,
+   "sync_limit_s": 0.0563,
+   "check_sync": true,
+   "check_va_duration": true
+  },
+  {
+   "source": "S4 4K 60fps CFR",
+   "encoder": "h264_nvenc",
+   "error": null,
+   "wall_s": 19.3,
+   "export_fps": 31.1,
+   "opencv_CAP_PROP_FPS": 60.0,
+   "src": {
+    "codec": "h264",
+    "pix_fmt": "yuv420p",
+    "size": [
+     3840,
+     2160
+    ],
+    "rotation": 0,
+    "display_size": [
+     3840,
+     2160
+    ],
+    "r_frame_rate": "60/1",
+    "avg_frame_rate": "60/1",
+    "frames": 600,
+    "v_duration": 10.0,
+    "v_start": 0.0,
+    "color_transfer": null,
+    "color_primaries": null,
+    "audio": {
+     "codec": "aac",
+     "duration": 10.0,
+     "start": 0.0,
+     "sample_rate": "48000"
+    },
+    "size_mb": 3.46
+   },
+   "out": {
+    "codec": "h264",
+    "pix_fmt": "yuv420p",
+    "size": [
+     3840,
+     2160
+    ],
+    "rotation": 0,
+    "display_size": [
+     3840,
+     2160
+    ],
+    "r_frame_rate": "60/1",
+    "avg_frame_rate": "60/1",
+    "frames": 600,
+    "v_duration": 10.0,
+    "v_start": 0.0,
+    "color_transfer": null,
+    "color_primaries": null,
+    "audio": {
+     "codec": "aac",
+     "duration": 9.984,
+     "start": 0.0,
+     "sample_rate": "48000"
+    },
+    "size_mb": 9.96
+   },
+   "check_display_size": true,
+   "check_r_frame_rate": true,
+   "check_frames": true,
+   "frames_diff": 0,
+   "check_audio": true,
+   "va_duration_diff_s": 0.016,
+   "src_events": 3,
+   "out_events": 3,
+   "src_av_offsets": [
+    0.0004,
+    0.0004,
+    0.0005
+   ],
+   "out_av_offsets": [
+    0.0004,
+    0.0004,
+    0.0005
+   ],
+   "av_drift_vs_src": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "max_abs_drift_s": 0.0,
+   "sync_limit_s": 0.0397,
+   "check_sync": true,
+   "check_va_duration": true
+  }
+ ],
+ "cancel": {
+  "error": null,
+  "file_exists_after_cancel": false
+ }
+}

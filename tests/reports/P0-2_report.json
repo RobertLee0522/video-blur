@@ -1,0 +1,518 @@
+{
+ "env": {
+  "os": "Windows-10-10.0.26200-SP0",
+  "machine": "AMD64",
+  "processor": "Intel64 Family 6 Model 151 Stepping 2, GenuineIntel",
+  "python": "3.11.13",
+  "opencv": "4.10.0",
+  "numpy": "1.26.4",
+  "ffmpeg": "ffmpeg version 7.1.1-full_build-www.gyan.dev Copyright (c) 2000-2025 the FFmpeg developers",
+  "ffmpeg_path": "C:\\ProgramData\\chocolatey\\bin\\ffmpeg.EXE"
+ },
+ "video": {
+  "size": [
+   1920,
+   1080
+  ],
+  "fps": 30,
+  "frames": 520
+ },
+ "params": {
+  "TR": "TR-960",
+  "min_conf": 0.3,
+  "padding": 0.05
+ },
+ "runs": {
+  "hold=0": {
+   "segments": [
+    {
+     "L": 120,
+     "end": 149,
+     "length": 30,
+     "state_mismatch": [],
+     "lost_stopped_frames": 30,
+     "lost_stopped_changed_px_max": 0,
+     "hold_frames": 0,
+     "hold_all_blurred": true,
+     "hold_anchor_iou_min": null,
+     "recover_frame": 150
+    },
+    {
+     "L": 229,
+     "end": 354,
+     "length": 126,
+     "state_mismatch": [],
+     "lost_stopped_frames": 126,
+     "lost_stopped_changed_px_max": 0,
+     "hold_frames": 0,
+     "hold_all_blurred": true,
+     "hold_anchor_iou_min": null,
+     "recover_frame": 355
+    },
+    {
+     "L": 470,
+     "end": 472,
+     "length": 3,
+     "state_mismatch": [],
+     "lost_stopped_frames": 3,
+     "lost_stopped_changed_px_max": 0,
+     "hold_frames": 0,
+     "hold_all_blurred": true,
+     "hold_anchor_iou_min": null,
+     "recover_frame": 473
+    }
+   ],
+   "scenario_A_whip": {
+    "states": [
+     "TRACKING",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING"
+    ],
+    "blurred_during": [
+     false,
+     false,
+     false
+    ],
+    "return_lag": [
+     473,
+     473,
+     0
+    ]
+   },
+   "scenario_B_half_occlusion": {
+    "states": [
+     "TRACKING",
+     "TRACKING",
+     "TRACKING"
+    ],
+    "max_leak_unoccluded": 0,
+    "after_3f_states": [
+     "TRACKING",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING"
+    ]
+   },
+   "scenario_C_full_occlusion": {
+    "states": [
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED"
+    ],
+    "after_states": [
+     "TRACKING",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING"
+    ],
+    "return_lag": [
+     150,
+     150,
+     0
+    ]
+   },
+   "scenario_C_pan_out": {
+    "A_gone_frame": 230,
+    "return_lag": [
+     356,
+     356,
+     0
+    ]
+   },
+   "lost_stopped_total": 159,
+   "lost_stopped_any_blur": 0,
+   "tracking_wrong_position_frames": [],
+   "tracking_on_occluder_frames": [],
+   "changed_outside_allowed_max": 0
+  },
+  "hold=5": {
+   "segments": [
+    {
+     "L": 120,
+     "end": 149,
+     "length": 30,
+     "state_mismatch": [],
+     "lost_stopped_frames": 25,
+     "lost_stopped_changed_px_max": 0,
+     "hold_frames": 5,
+     "hold_all_blurred": true,
+     "hold_anchor_iou_min": 0.9883,
+     "recover_frame": 150
+    },
+    {
+     "L": 229,
+     "end": 354,
+     "length": 126,
+     "state_mismatch": [],
+     "lost_stopped_frames": 121,
+     "lost_stopped_changed_px_max": 0,
+     "hold_frames": 5,
+     "hold_all_blurred": true,
+     "hold_anchor_iou_min": 0.0,
+     "recover_frame": 355
+    },
+    {
+     "L": 470,
+     "end": 472,
+     "length": 3,
+     "state_mismatch": [],
+     "lost_stopped_frames": 0,
+     "lost_stopped_changed_px_max": 0,
+     "hold_frames": 3,
+     "hold_all_blurred": true,
+     "hold_anchor_iou_min": 0.0,
+     "recover_frame": 473
+    }
+   ],
+   "scenario_A_whip": {
+    "states": [
+     "TRACKING",
+     "HOLD",
+     "HOLD",
+     "HOLD",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING"
+    ],
+    "blurred_during": [
+     true,
+     true,
+     true
+    ],
+    "return_lag": [
+     473,
+     473,
+     0
+    ]
+   },
+   "scenario_B_half_occlusion": {
+    "states": [
+     "TRACKING",
+     "TRACKING",
+     "TRACKING"
+    ],
+    "max_leak_unoccluded": 0,
+    "after_3f_states": [
+     "TRACKING",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING"
+    ]
+   },
+   "scenario_C_full_occlusion": {
+    "states": [
+     "HOLD",
+     "HOLD",
+     "HOLD",
+     "HOLD",
+     "HOLD",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED"
+    ],
+    "after_states": [
+     "TRACKING",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING"
+    ],
+    "return_lag": [
+     150,
+     150,
+     0
+    ]
+   },
+   "scenario_C_pan_out": {
+    "A_gone_frame": 230,
+    "return_lag": [
+     356,
+     356,
+     0
+    ]
+   },
+   "lost_stopped_total": 146,
+   "lost_stopped_any_blur": 0,
+   "tracking_wrong_position_frames": [],
+   "tracking_on_occluder_frames": [],
+   "changed_outside_allowed_max": 0
+  },
+  "hold=15": {
+   "segments": [
+    {
+     "L": 120,
+     "end": 149,
+     "length": 30,
+     "state_mismatch": [],
+     "lost_stopped_frames": 15,
+     "lost_stopped_changed_px_max": 0,
+     "hold_frames": 15,
+     "hold_all_blurred": true,
+     "hold_anchor_iou_min": 0.9594,
+     "recover_frame": 150
+    },
+    {
+     "L": 229,
+     "end": 354,
+     "length": 126,
+     "state_mismatch": [],
+     "lost_stopped_frames": 111,
+     "lost_stopped_changed_px_max": 0,
+     "hold_frames": 15,
+     "hold_all_blurred": true,
+     "hold_anchor_iou_min": 0.0,
+     "recover_frame": 355
+    },
+    {
+     "L": 470,
+     "end": 472,
+     "length": 3,
+     "state_mismatch": [],
+     "lost_stopped_frames": 0,
+     "lost_stopped_changed_px_max": 0,
+     "hold_frames": 3,
+     "hold_all_blurred": true,
+     "hold_anchor_iou_min": 0.0,
+     "recover_frame": 473
+    }
+   ],
+   "scenario_A_whip": {
+    "states": [
+     "TRACKING",
+     "HOLD",
+     "HOLD",
+     "HOLD",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING"
+    ],
+    "blurred_during": [
+     true,
+     true,
+     true
+    ],
+    "return_lag": [
+     473,
+     473,
+     0
+    ]
+   },
+   "scenario_B_half_occlusion": {
+    "states": [
+     "TRACKING",
+     "TRACKING",
+     "TRACKING"
+    ],
+    "max_leak_unoccluded": 0,
+    "after_3f_states": [
+     "TRACKING",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING"
+    ]
+   },
+   "scenario_C_full_occlusion": {
+    "states": [
+     "HOLD",
+     "HOLD",
+     "HOLD",
+     "HOLD",
+     "HOLD",
+     "HOLD",
+     "HOLD",
+     "HOLD",
+     "HOLD",
+     "HOLD",
+     "HOLD",
+     "HOLD",
+     "HOLD",
+     "HOLD",
+     "HOLD",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED",
+     "LOST_STOPPED"
+    ],
+    "after_states": [
+     "TRACKING",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING",
+     "TRACKING"
+    ],
+    "return_lag": [
+     150,
+     150,
+     0
+    ]
+   },
+   "scenario_C_pan_out": {
+    "A_gone_frame": 230,
+    "return_lag": [
+     356,
+     356,
+     0
+    ]
+   },
+   "lost_stopped_total": 126,
+   "lost_stopped_any_blur": 0,
+   "tracking_wrong_position_frames": [],
+   "tracking_on_occluder_frames": [],
+   "changed_outside_allowed_max": 0
+  }
+ },
+ "ui_check_hold5": {
+  "analysis_error": null,
+  "L=120+2": {
+   "status": "遺失(保留模糊 3)",
+   "tree": "遺失(保留模糊 3)",
+   "cache_state_matches_headless": true,
+   "canvas": [
+    {
+     "type": "polygon",
+     "outline": "#ff9f1a",
+     "dash": ""
+    },
+    {
+     "type": "text",
+     "text": "A",
+     "fill": "#ff9f1a"
+    }
+   ]
+  },
+  "L=120+6": {
+   "status": "遺失-已停止模糊",
+   "tree": "遺失-已停止模糊",
+   "cache_state_matches_headless": true,
+   "canvas": [
+    {
+     "type": "polygon",
+     "outline": "#ff4d4f",
+     "dash": "6 4"
+    },
+    {
+     "type": "text",
+     "text": "A 遺失-未模糊",
+     "fill": "#ff4d4f"
+    }
+   ]
+  },
+  "L=229+2": {
+   "status": "遺失(保留模糊 3)",
+   "tree": "遺失(保留模糊 3)",
+   "cache_state_matches_headless": true,
+   "canvas": [
+    {
+     "type": "polygon",
+     "outline": "#ff9f1a",
+     "dash": ""
+    },
+    {
+     "type": "text",
+     "text": "A",
+     "fill": "#ff9f1a"
+    }
+   ]
+  },
+  "L=229+6": {
+   "status": "遺失-已停止模糊",
+   "tree": "遺失-已停止模糊",
+   "cache_state_matches_headless": true,
+   "canvas": [
+    {
+     "type": "polygon",
+     "outline": "#ff4d4f",
+     "dash": "6 4"
+    },
+    {
+     "type": "text",
+     "text": "A 遺失-未模糊",
+     "fill": "#ff4d4f"
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,382 @@
+{
+ "env": {
+  "os": "Windows-10-10.0.26200-SP0",
+  "machine": "AMD64",
+  "processor": "Intel64 Family 6 Model 151 Stepping 2, GenuineIntel",
+  "python": "3.11.13",
+  "opencv": "4.10.0",
+  "numpy": "1.26.4",
+  "ffmpeg": "ffmpeg version 7.1.1-full_build-www.gyan.dev Copyright (c) 2000-2025 the FFmpeg developers",
+  "ffmpeg_path": "C:\\ProgramData\\chocolatey\\bin\\ffmpeg.EXE"
+ },
+ "videos": {
+  "H.264 GOP250 B3": "V-cache_h264_gop250_bf3.mp4",
+  "HEVC 10-bit HDR-tag": "V-cache_hevc10_hdrtag.mp4",
+  "VFR 30/60/24 fps": "V-cache_vfr_30_60_24.mp4"
+ },
+ "params": {
+  "TR": "TR-960",
+  "keyframe": 300,
+  "stop": 900,
+  "min_conf": 0.3,
+  "hold": 5
+ },
+ "E5_analysis_range": [
+  300,
+  900
+ ],
+ "E5_analysis": {
+  "error": null,
+  "progress_total": 600,
+  "progress_done": 600,
+  "processed_frames": [
+   300,
+   899
+  ],
+  "n_processed": 600,
+  "cache": {
+   "len": 600,
+   "min": 300,
+   "max": 899
+  },
+  "wall_s": 17.44
+ },
+ "E1_export_after_analysis": {
+  "error": null,
+  "wall_s": 32.53,
+  "frames": 1500,
+  "track_step_calls": 0,
+  "recover_calls": 0,
+  "to_gray_calls": 1500,
+  "to_gray_total_s": 3.75,
+  "to_gray_on_cached_or_inactive_s": 3.75,
+  "cache_changed_during_export": []
+ },
+ "E5_export": {
+  "frames_outside_range_with_blur": [],
+  "n_outside_blur": 0,
+  "frames_inside_range_without_blur_poly": [],
+  "n_inside_none": 0
+ },
+ "E4_invalidation": [
+  {
+   "op": "hold_frames 5->9",
+   "cur_idx": 300,
+   "before": {
+    "len": 600,
+    "min": 300,
+    "max": 899
+   },
+   "after": [
+    {
+     "len": 600,
+     "min": 300,
+     "max": 899
+    }
+   ],
+   "expected": "不清除"
+  },
+  {
+   "op": "padding 5%->3%",
+   "cur_idx": 300,
+   "before": {
+    "len": 600,
+    "min": 300,
+    "max": 899
+   },
+   "after": [
+    {
+     "len": 600,
+     "min": 300,
+     "max": 899
+    }
+   ],
+   "expected": "不清除"
+  },
+  {
+   "op": "strength 50->70",
+   "cur_idx": 300,
+   "before": {
+    "len": 600,
+    "min": 300,
+    "max": 899
+   },
+   "after": [
+    {
+     "len": 600,
+     "min": 300,
+     "max": 899
+    }
+   ],
+   "expected": "不清除"
+  },
+  {
+   "op": "mode -> 馬賽克",
+   "cur_idx": 300,
+   "before": {
+    "len": 600,
+    "min": 300,
+    "max": 899
+   },
+   "after": [
+    {
+     "len": 600,
+     "min": 300,
+     "max": 899
+    }
+   ],
+   "expected": "不清除"
+  },
+  {
+   "op": "blur toggle",
+   "cur_idx": 300,
+   "before": {
+    "len": 600,
+    "min": 300,
+    "max": 899
+   },
+   "after": [
+    {
+     "len": 600,
+     "min": 300,
+     "max": 899
+    }
+   ],
+   "expected": "不清除"
+  },
+  {
+   "op": "重新框選 @600",
+   "cur_idx": 600,
+   "before": {
+    "len": 600,
+    "min": 300,
+    "max": 899
+   },
+   "after": [
+    {
+     "len": 301,
+     "min": 300,
+     "max": 600
+    }
+   ],
+   "expected": ">=600 清除 (之後重算當前幀 600)"
+  },
+  {
+   "op": "STOP @700",
+   "cur_idx": 700,
+   "before": {
+    "len": 600,
+    "min": 300,
+    "max": 899
+   },
+   "after": [
+    {
+     "len": 400,
+     "min": 300,
+     "max": 699
+    }
+   ],
+   "expected": ">=700 清除"
+  },
+  {
+   "op": "恢復 (移除 STOP 700) @760",
+   "cur_idx": 760,
+   "before": {
+    "len": 400,
+    "min": 300,
+    "max": 699
+   },
+   "after": [
+    {
+     "len": 400,
+     "min": 300,
+     "max": 699
+    }
+   ],
+   "expected": ">=700 清除"
+  },
+  {
+   "op": "min_conf 30->45",
+   "cur_idx": 760,
+   "before": {
+    "len": 600,
+    "min": 300,
+    "max": 899
+   },
+   "after": [
+    {
+     "len": 0,
+     "min": null,
+     "max": null
+    }
+   ],
+   "expected": "全部清除"
+  },
+  {
+   "op": "TR-960 -> TR-1440",
+   "cur_idx": 760,
+   "before": {
+    "len": 600,
+    "min": 300,
+    "max": 899
+   },
+   "after": [
+    {
+     "len": 0,
+     "min": null,
+     "max": null
+    }
+   ],
+   "expected": "全部清除 + 重建樣板"
+  },
+  {
+   "op": "儲存 -> 載入專案",
+   "cur_idx": 0,
+   "before": {
+    "len": 600,
+    "min": 300,
+    "max": 899
+   },
+   "after": [
+    {
+     "len": 0,
+     "min": null,
+     "max": null
+    }
+   ],
+   "expected": "快取為空"
+  },
+  {
+   "op": "刪除目標",
+   "cur_idx": 0,
+   "before": {
+    "len": 600,
+    "min": 300,
+    "max": 899
+   },
+   "after": [],
+   "expected": "目標移除"
+  }
+ ],
+ "E2_direct_export": {
+  "error": null,
+  "wall_s": 40.81,
+  "track_step_calls": 599,
+  "recover_calls": 119,
+  "poly_max_diff_px": 0.0,
+  "frames_diff_gt_0.5px_or_mismatch": [],
+  "n_diffs": 0,
+  "output_compare": {
+   "frames": 1499,
+   "frames_different": 0,
+   "min_psnr": null
+  }
+ },
+ "E3_seek_alignment": {
+  "H.264 GOP250 B3": {
+   "frames_sequential": 1500,
+   "CAP_PROP_FRAME_COUNT": 1500,
+   "CAP_PROP_FPS": 30.0,
+   "sampled": 200,
+   "mismatch": 0,
+   "mismatch_detail": [],
+   "offsets_seen": []
+  },
+  "HEVC 10-bit HDR-tag": {
+   "frames_sequential": 600,
+   "CAP_PROP_FRAME_COUNT": 600,
+   "CAP_PROP_FPS": 30.0,
+   "sampled": 200,
+   "mismatch": 0,
+   "mismatch_detail": [],
+   "offsets_seen": []
+  },
+  "VFR 30/60/24 fps": {
+   "frames_sequential": 840,
+   "CAP_PROP_FRAME_COUNT": 840,
+   "CAP_PROP_FPS": 33.6224,
+   "sampled": 200,
+   "mismatch": 165,
+   "mismatch_detail": [
+    {
+     "k": 151,
+     "read_ok": true,
+     "matches_frame_offset": -14
+    },
+    {
+     "k": 152,
+     "read_ok": true,
+     "matches_frame_offset": -14
+    },
+    {
+     "k": 155,
+     "read_ok": true,
+     "matches_frame_offset": -14
+    },
+    {
+     "k": 164,
+     "read_ok": true,
+     "matches_frame_offset": -14
+    },
+    {
+     "k": 170,
+     "read_ok": true,
+     "matches_frame_offset": -14
+    },
+    {
+     "k": 173,
+     "read_ok": true,
+     "matches_frame_offset": -14
+    },
+    {
+     "k": 179,
+     "read_ok": true,
+     "matches_frame_offset": -14
+    },
+    {
+     "k": 184,
+     "read_ok": true,
+     "matches_frame_offset": -14
+    },
+    {
+     "k": 187,
+     "read_ok": true,
+     "matches_frame_offset": -14
+    },
+    {
+     "k": 191,
+     "read_ok": true,
+     "matches_frame_offset": -14
+    },
+    {
+     "k": 202,
+     "read_ok": true,
+     "matches_frame_offset": -14
+    },
+    {
+     "k": 205,
+     "read_ok": true,
+     "matches_frame_offset": -14
+    },
+    {
+     "k": 206,
+     "read_ok": true,
+     "matches_frame_offset": -14
+    },
+    {
+     "k": 210,
+     "read_ok": true,
+     "matches_frame_offset": -14
+    },
+    {
+     "k": 214,
+     "read_ok": true,
+     "matches_frame_offset": -14
+    }
+   ],
+   "offsets_seen": [
+    -14
+   ]
+  }
+ }
+}
